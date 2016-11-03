@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """A script for converting between the binary and pdb formats."""
 
-import argparse, sys
+import argparse, sys, os
 import bin_to_pdb_conversion
 import pdb_to_bin_conversion
 
@@ -29,18 +29,15 @@ def pars_inp():
         print "Error, you cannot provide both the --bin_to_pdb and --pdb_to_bin options"
         sys.exit(1)
 
-    spl = args.inputFile.split(".")
-    ext = spl[-1] # Extension of the input file 
-    file_pref = "".join(spl[:-1]) # Part of the input file without extension 
-
+    file_pref, ext = os.path.splitext(args.inputFile)
     if args.bin_to_pdb:
         bin_to_pdb = True
     elif args.pdb_to_bin:
         bin_to_pdb = False
     else: # guess the conversion direction from the file extension
-        if ext == 'bin':
+        if ext == '.bin':
             bin_to_pdb = True
-        elif ext == 'pdb':
+        elif ext == '.pdb':
             bin_to_pdb = False
         else:
             print "Error, you must provide the --bin_to_pdb or --pdb_to_bin option or the input file should have bin or pdb extension"
@@ -48,9 +45,9 @@ def pars_inp():
 
     if args.outputFile:
         out_name = args.outputFile
-    elif bin_to_pdb and ext == "bin":
+    elif bin_to_pdb and ext == ".bin":
         out_name = file_pref + ".pdb"
-    elif not bin_to_pdb and ext == "pdb":
+    elif not bin_to_pdb and ext == ".pdb":
         out_name = file_pref + ".bin"
     else:
         print """Error, you must provide the output file name, or
